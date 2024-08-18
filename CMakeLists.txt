@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(cs6120-tasks)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # 找到 nlohmann_json 庫
 find_package(nlohmann_json 3.2.0 REQUIRED)
