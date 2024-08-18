@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(cs6120-tasks)
+set(CMAKE_CXX_STANDARD 17)
 
 # 找到 nlohmann_json 庫
 find_package(nlohmann_json 3.2.0 REQUIRED)
 
+add_subdirectory(cfg)
 # add_executable(my_executable main.cpp)
 
 # # 將 nlohmann_json 庫鏈接到可執行文件中
