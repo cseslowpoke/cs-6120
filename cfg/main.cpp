@@ -49,7 +49,7 @@ std::vector<std::pair<std::string, json>> block_map(json &body) {
     return name2block;
 }
 
-std::vector<std::pair<std::string, std::string> > get_cfg(std::vector<std::pair<std::string, json>> blockmap) {
+std::vector<std::pair<std::string, std::string> > get_cfg(std::vector<std::pair<std::string, json>> &blockmap) {
     std::vector<std::pair<std::string, std::string> > cfg;
     for (size_t i = 0; i < blockmap.size(); i++) {
         auto &[name, block] = blockmap[i];
