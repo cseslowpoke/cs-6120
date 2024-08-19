@@ -71,7 +71,6 @@ std::vector<std::pair<std::string, std::string> > get_cfg(std::vector<std::pair<
         }
     }
     return cfg;
-
 }
 
 void cfg() {
