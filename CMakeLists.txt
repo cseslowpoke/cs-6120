@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 find_package(nlohmann_json 3.2.0 REQUIRED)
 
 add_subdirectory(cfg)
+add_subdirectory(dce)
 # add_executable(my_executable main.cpp)
 
 # # 將 nlohmann_json 庫鏈接到可執行文件中
