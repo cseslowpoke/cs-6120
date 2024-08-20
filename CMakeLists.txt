@@ -9,6 +9,7 @@ find_package(nlohmann_json 3.2.0 REQUIRED)
 
 add_subdirectory(cfg)
 add_subdirectory(tdce)
+add_subdirectory(lvn)
 # add_executable(my_executable main.cpp)
 
 # # 將 nlohmann_json 庫鏈接到可執行文件中

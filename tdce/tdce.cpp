@@ -39,12 +39,13 @@ json form_block(json &body) {
 
 bool simple_dce(json &body) {
     bool changed = false;
-    std::unordered_map<std::string, json::iterator> name2pos;
+    std::unordered_map<std::string, int> name2pos;
     std::unordered_map<std::string, int> name2cnt;
     // std::priority_queue<std::string> pq;
+    std::vector<int> to_remove;
     for (int i = 0; i < body.size(); i++) {
         if (body[i].contains("dest")) {
-            name2pos[body[i]["dest"]] = body.begin() + i; 
+            name2pos[body[i]["dest"]] = i; 
         }
         if (body[i].contains("args")) {
             for (auto &arg: body[i]["args"]) {
@@ -55,9 +56,13 @@ bool simple_dce(json &body) {
     for (auto &[k, v]: name2pos) {
         if (name2cnt[k] == 0) {
             // std::cerr << "Removing: " << v->dump(2) << std::endl;
-            body.erase(v);
+            to_remove.push_back(v);
             changed = true;
         }
+    }
+    sort(to_remove.rbegin(), to_remove.rend());
+    for (auto &pos: to_remove) {
+        body.erase(body.begin() + pos);
     }
     return changed;
 }
