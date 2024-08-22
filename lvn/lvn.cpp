@@ -87,7 +87,10 @@ void lvn(json &block) {
                 name2val[name] = instr["value"];
             }
             else if (op == "id") {
-                name2name[name] = name2name[instr["args"][0]];
+                if (name2name.find(instr["args"][0]) == name2name.end()) 
+                    name2name[name] = instr["args"][0];
+                else
+                    name2name[name] = name2name[instr["args"][0]];
             }
             else if (op == "add" || op == "sub" || op == "mul" || op == "div") {
                 auto &lhs = instr["args"][0];
