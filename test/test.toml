@@ -7,17 +7,32 @@ pipeline = [
     "brili -p {args}",
 ]
 
-[runs.tdce]
-pipeline = [
-    "bril2json",
-    "../build/tdce/tdce",
-    "brili -p {args}",
-]
+# [runs.tdce]
+# pipeline = [
+#     "bril2json",
+#     "../build/tdce/tdce",
+#     "brili -p {args}",
+# ]
+
+# [runs.ori_tdce]
+# pipeline = [
+#     "bril2json",
+#     "python3 ../../bril/examples/tdce.py tdce+",
+#     "brili -p {args}",
+# ]
 
 [runs.lvn]
 pipeline = [
     "bril2json",
     "../build/lvn/lvn",
     "../build/tdce/tdce",
+    "brili -p {args}",
+]
+
+[runs.ori_lvn]
+pipeline = [
+    "bril2json",
+    "python3 ../../bril/examples/lvn.py -p -c -f",
+    "python3 ../../bril/examples/tdce.py tdce+",
     "brili -p {args}",
 ]

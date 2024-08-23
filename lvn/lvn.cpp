@@ -95,7 +95,7 @@ void lvn(json &block) {
             else if (op == "add" || op == "sub" || op == "mul" || op == "div") {
                 auto &lhs = instr["args"][0];
                 auto &rhs = instr["args"][1];
-                if (lhs == name2name[lhs] && rhs == name2name[rhs]) {
+                if (name2val.find(lhs) != name2val.end() && name2val.find(rhs) != name2val.end()) {
                     name2name[name] = name;
                     if (op == "add") {
                         name2val[name] = name2val[lhs] + name2val[rhs];
@@ -130,9 +130,8 @@ void lvn(json &block) {
                         name2name[name] = op2name[{oper.op, lhs, rhs}];
                     }
                     else {
-                        name2name[name] = name;
-
                         op2name[{oper.op, lhs, rhs}] = name2name[name];
+                        name2name[name] = name;
                         now++;
                     }
                 }

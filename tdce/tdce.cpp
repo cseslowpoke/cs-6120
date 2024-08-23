@@ -75,18 +75,18 @@ bool unused_local(json &body) {
         std::vector<int> to_remove;
         for (size_t i = 0; i < block.size(); i++) {
             auto &instr = block[i];
-            if (instr.contains("dest") ) {
-                if (name2pos.find(instr["dest"]) != name2pos.end()) {
-                    to_remove.push_back(name2pos[instr["dest"]]);
-                }
-                name2pos[instr["dest"]] = i;
-            }
             if (instr.contains("args")) {
                 for (auto &arg: instr["args"]) {
                     if (name2pos.find(arg) != name2pos.end()) {
                         name2pos.erase(arg);
                     }
                 }
+            }
+            if (instr.contains("dest") ) {
+                if (name2pos.find(instr["dest"]) != name2pos.end()) {
+                    to_remove.push_back(name2pos[instr["dest"]]);
+                }
+                name2pos[instr["dest"]] = i;
             }
         }
         sort(to_remove.begin(), to_remove.end());
@@ -108,9 +108,7 @@ bool unused_local(json &body) {
 int main(){
     json prog = json::parse(std::cin);
     for (auto &func: prog["functions"]) {
-        while(simple_dce(func["instrs"]) || unused_local(func["instrs"])) {
-            // std::cout << "Changed: " << func["instrs"].dump(2) << std::endl;
-        }
+        while(simple_dce(func["instrs"]) || unused_local(func["instrs"]));
     }
     std::cout << prog.dump(2) << std::endl;
     return 0;
