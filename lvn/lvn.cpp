@@ -68,7 +68,6 @@ void lvn(json &block) {
     std::unordered_map<std::string, std::string> name2name;
     std::unordered_map<std::string, int> name2val;
     std::map<std::tuple<Operator::Op, std::string, std::string>, std::string> op2name;
-    int now = 0;
     for (size_t i = 0; i < block.size(); i++) {
         auto &instr = block[i];
         if (instr.contains("args")) {
@@ -132,7 +131,6 @@ void lvn(json &block) {
                     else {
                         op2name[{oper.op, lhs, rhs}] = name2name[name];
                         name2name[name] = name;
-                        now++;
                     }
                 }
             }

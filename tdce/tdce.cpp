@@ -1,4 +1,3 @@
-#include <cmath>
 #include <cstddef>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -43,9 +42,9 @@ bool simple_dce(json &body) {
     std::unordered_map<std::string, int> name2cnt;
     // std::priority_queue<std::string> pq;
     std::vector<int> to_remove;
-    for (int i = 0; i < body.size(); i++) {
+    for (size_t i = 0; i < body.size(); i++) {
         if (body[i].contains("dest")) {
-            name2pos[body[i]["dest"]] = i; 
+            name2pos[body[i]["dest"]] = (int)i; 
         }
         if (body[i].contains("args")) {
             for (auto &arg: body[i]["args"]) {
@@ -86,7 +85,7 @@ bool unused_local(json &body) {
                 if (name2pos.find(instr["dest"]) != name2pos.end()) {
                     to_remove.push_back(name2pos[instr["dest"]]);
                 }
-                name2pos[instr["dest"]] = i;
+                name2pos[instr["dest"]] = (int)i;
             }
         }
         sort(to_remove.begin(), to_remove.end());
