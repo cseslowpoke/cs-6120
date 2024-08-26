@@ -1,9 +1,0 @@
-*.aux
-*.out
-*.log
-base.tex
-float.tex
-mem.tex
-ssa.tex
-types.tex
-brb.pdf
