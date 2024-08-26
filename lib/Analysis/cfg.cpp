@@ -1,10 +1,4 @@
-#include <iostream>
-#include <string>
-#include <set>
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
- 
-static std::set<std::string> terminator = {"jmp", "br", "ret"};
+#include "Analysis/cfg.h"
 
 json form_block(json &body) {
     json func = json::array();
@@ -73,22 +67,16 @@ std::vector<std::pair<std::string, std::string> > get_cfg(std::vector<std::pair<
     return cfg;
 }
 
-void cfg() {
-    json prog = json::parse(std::cin);
+void cfg(json prog) {
     for (auto func: prog["functions"]) {
         auto block = form_block(func["instrs"]);
         auto name2block = block_map(block);
         for (auto &[name, block]: name2block) {
-            std::cout << name << ": \n  " << block.dump(-1) << std::endl;
+            // std::cout << name << ": \n  " << block.dump(-1) << std::endl;
         }
         auto cfg = get_cfg(name2block);
         for (auto &[from, to]: cfg) {
-            std::cout << from << " -> " << to << std::endl;
+            // std::cout << from << " -> " << to << std::endl;
         }
     }
-}
-
-int main() {
-    cfg();
-    return 0;
 }
