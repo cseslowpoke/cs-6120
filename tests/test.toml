@@ -1,5 +1,5 @@
 extract = 'total_dyn_inst: (\d+)'
-benchmarks = '../tools/bril/benchmarks/core/*.bril'
+benchmarks = '/home/pokepoke/Project/cs-6120/tools/bril/benchmarks/core/*.bril'
 # benchmarks = '../../bril/examples/test/tdce/*.bril'
 [runs.baseline]
 pipeline = [
