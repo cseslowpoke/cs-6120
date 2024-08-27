@@ -13,6 +13,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 # 添加 lib/ 目錄下的庫
 add_library(PassLib STATIC 
     ${PROJECT_SOURCE_DIR}/lib/Analysis/cfg.cpp
+    ${PROJECT_SOURCE_DIR}/lib/Analysis/reachdef.cpp
     ${PROJECT_SOURCE_DIR}/lib/Passes/tdce.cpp
     ${PROJECT_SOURCE_DIR}/lib/Passes/lvn.cpp
 )
@@ -21,7 +22,7 @@ add_library(PassLib STATIC
 
 add_subdirectory(tools/tdce)
 add_subdirectory(tools/lvn)
-
+add_subdirectory(tools/reachdef)
 
 
 # # # 將 nlohmann_json 庫鏈接到可執行文件中
