@@ -18,6 +18,8 @@ add_library(PassLib STATIC
     ${PROJECT_SOURCE_DIR}/lib/Passes/lvn.cpp
 )
 
+target_link_libraries(PassLib PRIVATE nlohmann_json::nlohmann_json)
+
 # target_link_libraries(PassLib Public ${PROJECT_SOURCE_DIR}/include)
 
 add_subdirectory(tools/tdce)
