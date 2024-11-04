@@ -1,3 +1,6 @@
 [submodule "tools/bril"]
 	path = tools/bril
-	url = https://github.com/sampsyo/bril.git
+	url = git@github.com:cseslowpoke/bril.git
+[submodule "bril"]
+	path = bril
+	url = git@github.com:cseslowpoke/bril.git
