@@ -24,28 +24,26 @@ public:
 
 template <typename T, typename U>
 DataFlowFramework<T, U>::DataFlowFramework(json &body) {
-  auto blocks = form_block(body);
-  auto name2block = block_map(blocks);
-  std::map<std::string, int> name2index;
-  for (size_t i = 0; i < name2block.size(); i++) {
-    name2index[name2block[i].first] = i;
-  }
-  auto edg_cfg = get_cfg(name2block);
+  auto form = form_block(body);
+  auto blockmap = BlockMap(form);
+  auto edg_cfg = get_cfg(blockmap);
   std::vector<std::vector<int>> succ_cfg, pred_cfg;
-  succ_cfg.resize(name2block.size());
-  pred_cfg.resize(name2block.size());
-  for (auto &[from, to] : edg_cfg) {
-    succ_cfg[name2index[from]].push_back(name2index[to]);
-    pred_cfg[name2index[to]].push_back(name2index[from]);
+  succ_cfg.resize(blockmap.size());
+  pred_cfg.resize(blockmap.size());
+  for (auto &[from, to_node] : edg_cfg) {
+    for (auto &to : to_node) {
+      succ_cfg[blockmap.getindex(from)].push_back(blockmap.getindex(to));
+      pred_cfg[blockmap.getindex(to)].push_back(blockmap.getindex(from));
+    }
   }
   in.clear();
   out.clear();
-  in.resize(name2block.size());
-  out.resize(name2block.size());
+  in.resize(blockmap.size());
+  out.resize(blockmap.size());
 
   // Initialize worklist
   std::set<int> worklist;
-  for (int i = 0; i < name2block.size(); i++) {
+  for (int i = 0; i < blockmap.size(); i++) {
     worklist.insert(i);
   }
   in[0] = static_cast<T *>(this)->init();
@@ -58,7 +56,7 @@ DataFlowFramework<T, U>::DataFlowFramework(json &body) {
       in[i] = static_cast<T *>(this)->merge(in[i], out[pred]);
     }
     U ori_out = out[i];
-    out[i] = static_cast<T *>(this)->transfer(in[i], name2block[i].second);
+    out[i] = static_cast<T *>(this)->transfer(in[i], blockmap[i]);
     if (!static_cast<T *>(this)->equal(ori_out, out[i])) {
       for (auto &succ : succ_cfg[i]) {
         worklist.insert(succ);
