@@ -2,7 +2,7 @@
 #include <cstdio>
 
 std::set<std::string> ReachDefAnalysis::transfer(std::set<std::string> out,
-                                                 json &block) {
+                                                 const json &block) {
   for (auto instr : block) {
     if (instr.contains("dest")) {
       out.insert(instr["dest"]);
