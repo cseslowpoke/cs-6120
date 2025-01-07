@@ -54,7 +54,7 @@ BlockMap::BlockMap(json &body) {
 //   }
 //   return name2block;
 // }
-
+#include <iostream>
 std::map<std::string, std::vector<std::string>> get_cfg(BlockMap &blockmap) {
   std::map<std::string, std::vector<std::string>> cfg;
   for (int i = 0; i < blockmap.size(); i++) {
@@ -68,12 +68,15 @@ std::map<std::string, std::vector<std::string>> get_cfg(BlockMap &blockmap) {
     } else if (last.at("op") == "ret") {
       cfg[name].push_back(" ");
     } else if (last.at("op") == "jmp") {
-      cfg[name].push_back(last.at("label")[0]);
+
+      cfg[name].push_back(last.at("labels")[0]);
     } else if (last.at("op") == "br") {
-      cfg[name].push_back(last.at("label")[0]);
-      cfg[name].push_back(last.at("label")[1]);
+      cfg[name].push_back(last.at("labels")[0]);
+      cfg[name].push_back(last.at("labels")[1]);
     } else {
-      cfg[name].push_back(blockmap.getname(i + 1));
+      if (i != blockmap.size() - 1) {
+        cfg[name].push_back(blockmap.getname(i + 1));
+      }
     }
   }
   return cfg;
