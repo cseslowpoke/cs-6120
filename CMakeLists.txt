@@ -26,10 +26,15 @@ target_link_libraries(PassLib PRIVATE nlohmann_json::nlohmann_json)
 add_subdirectory(tools/tdce)
 add_subdirectory(tools/lvn)
 add_subdirectory(tools/reachdef)
-add_subdirectory(tools/dominator)
 
+
+# test_cfg
 add_executable(test_cfg ${PROJECT_SOURCE_DIR}/tests/test_cfg.cpp)
 target_link_libraries(test_cfg PRIVATE PassLib)
+
+# test_dominator
+add_executable(test_dom ${PROJECT_SOURCE_DIR}/tests/test_dom.cpp)
+target_link_libraries(test_dom PRIVATE PassLib)
 
 # # # 將 nlohmann_json 庫鏈接到可執行文件中
 # # target_link_libraries(my_executable PRIVATE nlohmann_json::nlohmann_json)

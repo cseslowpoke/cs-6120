@@ -4,7 +4,10 @@
 #pragma once
 
 #include "PassBase.h"
+#include <map>
 #include <nlohmann/json.hpp>
+#include <set>
+#include <string>
 
 class DominatorTree {
 public:
@@ -12,7 +15,7 @@ public:
   void print();
 
 private:
-  std::vector<std::vector<std::string>> dom;
+  std::map<std::string, std::set<std::string>> dom;
 };
 
 class DominatorTreePass : public PassBase {
