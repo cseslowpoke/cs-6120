@@ -24,26 +24,18 @@ public:
 
 template <typename T, typename U>
 DataFlowFramework<T, U>::DataFlowFramework(json &body) {
-  auto form = form_block(body);
-  auto blockmap = BlockMap(form);
-  auto edg_cfg = get_cfg(blockmap);
+  auto form = formBlock(body);
+  auto function = BlockMap(form);
+  buildCFG(function);
   std::vector<std::vector<int>> succ_cfg, pred_cfg;
-  succ_cfg.resize(blockmap.size());
-  pred_cfg.resize(blockmap.size());
-  for (auto &[from, to_node] : edg_cfg) {
-    for (auto &to : to_node) {
-      succ_cfg[blockmap.getindex(from)].push_back(blockmap.getindex(to));
-      pred_cfg[blockmap.getindex(to)].push_back(blockmap.getindex(from));
-    }
-  }
   in.clear();
   out.clear();
-  in.resize(blockmap.size());
-  out.resize(blockmap.size());
+  in.resize(function.size());
+  out.resize(function.size());
 
   // Initialize worklist
   std::set<int> worklist;
-  for (int i = 0; i < blockmap.size(); i++) {
+  for (int i = 0; i < function.size(); i++) {
     worklist.insert(i);
   }
   in[0] = static_cast<T *>(this)->init();
@@ -56,7 +48,7 @@ DataFlowFramework<T, U>::DataFlowFramework(json &body) {
       in[i] = static_cast<T *>(this)->merge(in[i], out[pred]);
     }
     U ori_out = out[i];
-    out[i] = static_cast<T *>(this)->transfer(in[i], blockmap[i]);
+    out[i] = static_cast<T *>(this)->transfer(in[i], function[i]);
     if (!static_cast<T *>(this)->equal(ori_out, out[i])) {
       for (auto &succ : succ_cfg[i]) {
         worklist.insert(succ);

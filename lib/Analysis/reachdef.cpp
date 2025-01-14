@@ -1,9 +1,10 @@
 #include "Analysis/reachdef.h"
+#include "Analysis/cfg.h"
 #include <cstdio>
 
 std::set<std::string> ReachDefAnalysis::transfer(std::set<std::string> out,
-                                                 const json &block) {
-  for (auto instr : block) {
+                                                 BasicBlock &block) {
+  for (auto instr : block.Data()) {
     if (instr.contains("dest")) {
       out.insert(instr["dest"]);
     }
