@@ -9,35 +9,23 @@ void calculate_frontier(std::map<std::string, std::set<std::string>> &frontier,
 
   for (int i = 0; i < function.size(); i++) {
     for (int j = 0; j < function.size(); j++) {
-      if (i == j) {
-        continue;
-      }
       auto &block0 = function[i];
       auto &block1 = function[j];
       if (dom[block1.getName()].find(block0.getName()) !=
-          dom[block1.getName()].end()) {
+              dom[block1.getName()].end() &&
+          block0.getName() != block1.getName()) {
         continue;
       }
       for (auto pred : block1.getPred()) {
         if (dom[pred->getName()].find(block0.getName()) !=
-            dom[pred->getName()].end()) {
+                dom[pred->getName()].end() ||
+            pred->getName() == block0.getName()) {
           frontier[block0.getName()].insert(block1.getName());
           break;
         }
       }
     }
   }
-}
-
-std::map<std::string, std::vector<std::string>>
-get_rev_cfg(std::map<std::string, std::vector<std::string>> &cfg) {
-  std::map<std::string, std::vector<std::string>> rev_cfg;
-  for (auto &[from, edge] : cfg) {
-    for (auto &to : edge) {
-      rev_cfg[to].push_back(from);
-    }
-  }
-  return rev_cfg;
 }
 
 DominatorTree::DominatorTree(json &body) {
