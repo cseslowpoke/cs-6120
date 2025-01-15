@@ -44,6 +44,8 @@ DominatorTree::DominatorTree(json &body) {
   auto form = formBlock(body);
   auto function = BlockMap(form);
   buildCFG(function);
+  addEntry(function);
+  addTerminators(function);
   bool change = 0;
   dom[function.getname(0)].insert(function.getname(0));
   for (int i = 1; i < function.size(); i++) {

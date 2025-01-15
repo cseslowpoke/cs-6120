@@ -37,8 +37,8 @@ bool TDCE::unused_local(json &body) {
   for (auto &block : form) {
     std::unordered_map<std::string, int> name2pos;
     std::vector<int> to_remove;
-    for (size_t i = 0; i < block.Data().size(); i++) {
-      auto &instr = block.Data()[i];
+    for (size_t i = 0; i < block->Data().size(); i++) {
+      auto &instr = block->Data()[i];
       if (instr.contains("args")) {
         for (auto &arg : instr["args"]) {
           if (name2pos.find(arg) != name2pos.end()) {
@@ -55,14 +55,14 @@ bool TDCE::unused_local(json &body) {
     }
     sort(to_remove.begin(), to_remove.end());
     for (auto &pos : to_remove) {
-      block.Data().erase(block.Data().begin() + pos);
+      block->Data().erase(block->Data().begin() + pos);
       changed = true;
     }
   }
   // flatten the blocks
   body.clear();
   for (auto &block : form) {
-    for (auto &instr : block.Data()) {
+    for (auto &instr : block->Data()) {
       body.push_back(instr);
     }
   }

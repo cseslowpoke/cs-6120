@@ -22,7 +22,7 @@ class LVN : public PassBase {
       }
     }
   };
-  void lvn(BasicBlock &block);
+  void lvn(BasicBlock *block);
 
 public:
   void run(nlohmann::json &ir) override;

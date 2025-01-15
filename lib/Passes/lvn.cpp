@@ -1,13 +1,13 @@
 #include "Passes/lvn.h"
 #include "Analysis/cfg.h"
 
-void LVN::lvn(BasicBlock &block) {
+void LVN::lvn(BasicBlock *block) {
   std::unordered_map<std::string, std::string> name2name;
   std::unordered_map<std::string, int> name2val;
   std::map<std::tuple<Operator::Op, std::string, std::string>, std::string>
       op2name;
-  for (size_t i = 0; i < block.Data().size(); i++) {
-    auto &instr = block.Data()[i];
+  for (size_t i = 0; i < block->Data().size(); i++) {
+    auto &instr = block->Data()[i];
     if (instr.contains("args")) {
       for (auto &arg : instr["args"]) {
         if (name2name.find(arg) != name2name.end()) {
@@ -72,12 +72,12 @@ void LVN::run(nlohmann::json &ir) {
   for (auto &func : ir["functions"]) {
     auto &instrs = func["instrs"];
     auto form = formBlock(instrs);
-    for (auto &block : form) {
+    for (auto *block : form) {
       lvn(block);
     }
     instrs.clear();
     for (auto &block : form) {
-      for (auto &instr : block.Data()) {
+      for (auto &instr : block->Data()) {
         instrs.push_back(instr);
       }
     }

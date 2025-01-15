@@ -1,40 +1,44 @@
 #include "Analysis/cfg.h"
+#include <iostream>
 
-BlockMap::BlockMap(std::vector<BasicBlock> &body) {
-  for (auto &block : body) {
-    auto blockd = block.Data();
+BlockMap::BlockMap(BlockMap::BasicBlocks &body) {
+  int i = 0;
+  for (auto *block : body) {
+    auto blockd = block->Data().at(0);
     std::string name;
     if (blockd.contains("label")) {
       name = blockd["label"];
     } else {
-      name = "b" + std::to_string(order.size());
+      name = "b" + std::to_string(i);
     }
-    index_map.insert({name, order.size()});
-    name_map.insert({order.size(), name});
+    block->setName(name);
+    index_map.insert({name, i});
+    name_map.insert({i, name});
+    i++;
   }
   order = std::move(body);
 }
 
-std::vector<BasicBlock> formBlock(json &body) {
-  std::vector<BasicBlock> func;
+BlockMap::BasicBlocks formBlock(json &body) {
+  BlockMap::BasicBlocks func;
   json cur_block = json::array();
   for (auto instr : body) {
     if (instr.contains("op")) {
       cur_block.push_back(instr);
       if (terminator.find(instr["op"]) != terminator.end()) {
-        func.push_back(BasicBlock(cur_block));
+        func.push_back(new BasicBlock(cur_block));
         cur_block.clear();
       }
     } else {
       if (!cur_block.empty()) {
-        func.push_back(BasicBlock(cur_block));
+        func.push_back(new BasicBlock(cur_block));
         cur_block.clear();
       }
       cur_block.push_back(instr);
     }
   }
   if (!cur_block.empty()) {
-    func.push_back(BasicBlock(cur_block));
+    func.push_back(new BasicBlock(cur_block));
   }
   return func;
 }
@@ -57,6 +61,7 @@ void buildCFG(BlockMap &Function) {
       block.addSucc(&target);
       target.addPred(&block);
     } else if (last.at("op") == "br") {
+      std::string a = last.at("labels")[0];
       int index0 = Function.getindex(last.at("labels")[0]);
       int index1 = Function.getindex(last.at("labels")[1]);
       auto &target0 = Function[index0];
@@ -71,5 +76,37 @@ void buildCFG(BlockMap &Function) {
         Function[i + 1].addPred(&block);
       }
     }
+  }
+}
+
+void addTerminators(BlockMap &func) {
+  for (int i = 0; i < func.size(); i++) {
+    auto &block = func[i];
+    auto &last = block.Data().back();
+    if (last.contains("op")) {
+      if (terminator.find(last.at("op")) == terminator.end()) {
+        if (i == func.size() - 1) {
+          json ret = {{"op", "ret"}, {"args", {}}};
+          block.Data().push_back(ret);
+        } else {
+          json jmp = {{"op", "jmp"}, {"labels", {func.getname(i + 1)}}};
+          block.Data().push_back(jmp);
+        }
+      }
+    }
+  }
+}
+
+void addEntry(BlockMap &func) {
+  auto &entry = func.getEntry();
+  if (!entry.getPred().empty()) {
+    auto blocks = func.getBlocks();
+    json entry_instr = {{{"label", "entry"}}};
+    BasicBlock *new_entry = new BasicBlock(entry_instr);
+    blocks.insert(blocks.begin(), new_entry);
+    BlockMap new_func(blocks);
+    func = new_func;
+    func[0].addSucc(&func[1]);
+    func[1].addPred(&func[0]);
   }
 }
