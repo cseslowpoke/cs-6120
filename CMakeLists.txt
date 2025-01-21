@@ -17,6 +17,7 @@ add_library(PassLib STATIC
     ${PROJECT_SOURCE_DIR}/lib/Analysis/reachdef.cpp
     ${PROJECT_SOURCE_DIR}/lib/Passes/tdce.cpp
     ${PROJECT_SOURCE_DIR}/lib/Passes/lvn.cpp
+    ${PROJECT_SOURCE_DIR}/lib/Passes/intoSSA.cpp
 )
 
 target_link_libraries(PassLib PRIVATE nlohmann_json::nlohmann_json)
@@ -26,6 +27,7 @@ target_link_libraries(PassLib PRIVATE nlohmann_json::nlohmann_json)
 add_subdirectory(tools/tdce)
 add_subdirectory(tools/lvn)
 add_subdirectory(tools/reachdef)
+add_subdirectory(tools/ssa)
 
 
 # test_cfg
