@@ -13,8 +13,8 @@ class DominatorTree {
 public:
   DominatorTree(json &body);
   void print();
-  const std::map<std::string, std::set<std::string>> &get_dom() { return dom; }
-  const std::map<std::string, std::set<std::string>> &get_frontier() {
+  const std::map<std::string, std::set<std::string>> &getDom() { return dom; }
+  const std::map<std::string, std::set<std::string>> &getFrontier() {
     return frontier;
   }
 
