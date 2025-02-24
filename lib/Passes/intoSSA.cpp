@@ -78,7 +78,8 @@ void addPhi(BlockMap &blocks, DominatorTree &domTree) {
   }
 }
 
-void rename(BlockMap &blocks) {}
+void rename(BasicBlock &entry, BlockMap &blockmap,
+            std::map<std::string, std::vector<std::string>> &vstack) {}
 
 json blockToIR(BlockMap &blockmap) {
   json ir = json::array();
@@ -91,6 +92,7 @@ json blockToIR(BlockMap &blockmap) {
   }
   return ir;
 }
+
 void toSSA(json &func) {
   auto form = formBlock(func);
   auto blocks = BlockMap(form);
@@ -99,6 +101,8 @@ void toSSA(json &func) {
   addEntry(blocks);
   DominatorTree domTree(func);
   addPhi(blocks, domTree);
+  std::map<std::string, std::vector<std::string>> vstack;
+  rename(blocks[0], blocks, vstack);
   func = blockToIR(blocks);
 }
 } // namespace
